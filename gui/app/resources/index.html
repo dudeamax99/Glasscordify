@@ -22,40 +22,96 @@
     <link href="style.css" rel="stylesheet">
   </head>
   <body>
-    <div class="drag" aria-hidden="true"></div>
-    <button type="button" class="minimize" aria-label="Minimize window">
-      <svg width="24" height="24"><use xlink:href="./sprite.svg#minimize"></use></svg>
-    </button>
-    <button type="button" class="close" aria-label="Close window">
-      <svg width="24" height="24"><use xlink:href="./sprite.svg#close"></use></svg>
-    </button>
+    <header>
+      <div class="drag" aria-hidden="true"></div>
+      <button type="button" class="minimize" aria-label="Minimize window">
+        <svg width="24" height="24"><use href="./sprite.svg#minimize"></use></svg>
+      </button>
+      <button type="button" class="close" aria-label="Close window">
+        <svg width="24" height="24"><use href="./sprite.svg#close"></use></svg>
+      </button>
+    </header>
     <main>
-      <section class="headline">
-        Make your installed Electron app look <span class="sexy">sexy</span> with <span class="glasscord">Glasscord</span>
+      <!-- Initial Section -->
+      <section id="initial">
+        <div class="headline">
+          Make your installed Electron app look <span class="sexy">sexy</span> with <span class="glasscord">Glasscord</span>
+        </div>
+        <div class="buttons">
+          <button class="button glasscord" data-install>Install it!</button>
+          <div class="sub-button">Got tired? <a href="#" role="button" data-uninstall>Uninstall it</a>.</div>
+        </div>
       </section>
-      <section class="buttons">
-        <button class="button glasscord">Install it!</button>
-        <button class="button red outline" style="display: none;">Uninstall</button>
-        <div class="sub-button">Got tired? <a href="#" role="button">Uninstall it</a>.</div>
+
+      <!-- ASAR Downloading Section -->
+      <section id="downloading" style="display: none">
+        <div class="headline">
+          Downloading Glasscord<br/>Please wait...
+        </div>
+      </section>
+
+      <!-- Errored Section -->
+      <section id="errored" style="display: none">
+        <div class="headline">
+          <span class="whoops">Whoops!</span> An error occurred while initializing. Make sure you're connected to Internet and try again.
+        </div>
+        <div class="buttons">
+          <button class="button red" id="btn-restart">Restart Glasscordify</button>
+        </div>
+      </section>
+
+      <!-- Installed Section -->
+      <section id="installed" style="display: none">
+        <div class="headline">
+          Make your installed Electron app look <span class="sexy">sexy</span> with <span class="glasscord">Glasscord</span>
+        </div>
+        <div class="buttons">
+          <button class="button green" data-install>Installed!</button>
+          <div class="sub-button">Got tired? <a href="#" role="button" data-uninstall>Uninstall it</a>.</div>
+        </div>
+      </section>
+
+      <!-- Install failed Section -->
+      <section id="failed" style="display: none">
+        <div class="headline">
+          <span class="whoops">Whoops!</span> This application is not supported by Glasscord!
+        </div>
+        <div class="buttons">
+          <button class="button red" data-install>Use another app?</button>
+          <div class="sub-button">I am very sorry!</div>
+        </div>
+      </section>
+
+      <!-- Drag and drop Section -->
+      <section id="dnd" style="display: none">
+        <div class="headline">
+          <span class="drag-text">Drag the application</span><br/>on the appropriate button!
+        </div>
+        <div class="buttons">
+          <button id="drop-target-install" class="button glasscord outline">Install</button>
+          <button id="drop-target-uninstall" class="button red outline">Uninstall</button>
+        </div>
       </section>
     </main>
     <footer>
       <div class="license">Made with ❤︎ by <a href="#" role="button" id="awesome">those awesome people</a>. Licensed under the Apache 2.0 License.</div>
       <div class="links">
         <a href="https://discord.gg/SftnByN" rel="noreferrer" target="_blank" title="Chat with us on Discord">
-          <svg width="24" height="24"><use xlink:href="./sprite.svg#discord"></use></svg>
+          <svg width="24" height="24"><use href="./sprite.svg#discord"></use></svg>
         </a>
         <a href="https://github.com/AryToNeX/Glasscord" rel="noreferrer" target="_blank" title="Check out the Github">
-          <svg width="24" height="24"><use xlink:href="./sprite.svg#github"></use></svg>
+          <svg width="24" height="24"><use href="./sprite.svg#github"></use></svg>
         </a>
       </div>
     </footer>
+
+    <!-- Team Modal -->
     <div aria-modal="true" role="dialog" class="modal hidden" aria-hidden="true">
       <div class="modal-inner">
         <div class="modal-header">
           <h3>The Team behind Glasscord</h3>
           <button type="button" aria-label="Close modal" id="modal-close">
-            <svg width="24" height="24"><use xlink:href="./sprite.svg#close"></use></svg>
+            <svg width="24" height="24"><use href="./sprite.svg#close"></use></svg>
           </button>
         </div>
         <div class="modal-contents contributors">
@@ -66,10 +122,10 @@
               <div class="description">A desperate girl - "end my life pls"</div>
               <div class="links">
                 <a href="https://github.com/AryToNeX" rel="noreferrer" target="_blank" title="AryToNeX on GitHub">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#github"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#github"></use></svg>
                 </a>
                 <a href="https://twitter.com/AryToNeX" rel="noreferrer" target="_blank" title="AryToNeX on Twitter">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#twitter"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#twitter"></use></svg>
                 </a>
               </div>
             </div>
@@ -78,13 +134,13 @@
             <img class="avatar" src="https://github.com/Bowser65.png" alt="Bowser65's avatar"/>
             <div class="about">
               <div class="name">Bowser65</div>
-              <div class="description">A weeb - "btw have i told you i use arch?"</div>
+              <div class="description">PhD of Surrender Science - "i use arch btw"</div>
               <div class="links">
                 <a href="https://github.com/Bowser65" rel="noreferrer" target="_blank" title="Bowser65 on GitHub">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#github"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#github"></use></svg>
                 </a>
                 <a href="https://twitter.com/Bowser65" rel="noreferrer" target="_blank" title="Bowser65 on Twitter">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#twitter"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#twitter"></use></svg>
                 </a>
               </div>
             </div>
@@ -96,10 +152,10 @@
               <div class="description">A baguette cat - "Meow"</div>
               <div class="links">
                 <a href="https://github.com/busybox11" rel="noreferrer" target="_blank" title="busybox11 on GitHub">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#github"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#github"></use></svg>
                 </a>
                 <a href="https://twitter.com/busybox11" rel="noreferrer" target="_blank" title="busybox11 on Twitter">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#twitter"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#twitter"></use></svg>
                 </a>
               </div>
             </div>
@@ -111,10 +167,10 @@
               <div class="description"></div>
               <div class="links">
                 <a href="https://github.com/rauenzi" rel="noreferrer" target="_blank" title="rauenzi on GitHub">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#github"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#github"></use></svg>
                 </a>
                 <a href="https://twitter.com/ZackRauen" rel="noreferrer" target="_blank" title="rauenzi on Twitter">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#twitter"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#twitter"></use></svg>
                 </a>
               </div>
             </div>
@@ -126,10 +182,10 @@
               <div class="description">"let me show you my mechanical keyboard collection 😏"</div>
               <div class="links">
                 <a href="https://github.com/katacarbix" rel="noreferrer" target="_blank" title="katacarbix on GitHub">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#github"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#github"></use></svg>
                 </a>
                 <a href="https://twitter.com/reeseovine" rel="noreferrer" target="_blank" title="katacarbix on Twitter">
-                  <svg width="18" height="18"><use xlink:href="./sprite.svg#twitter"></use></svg>
+                  <svg width="18" height="18"><use href="./sprite.svg#twitter"></use></svg>
                 </a>
               </div>
             </div>

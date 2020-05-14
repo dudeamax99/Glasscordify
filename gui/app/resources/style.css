@@ -198,7 +198,7 @@ main {
 }
 
 .buttons .button.glasscord.outline {
-	border-color: var(--glasscord-gradient);
+	border-color: #c03cdb;
 }
 
 .buttons .button.glasscord.outline:hover {
