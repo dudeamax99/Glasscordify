@@ -40,7 +40,7 @@ module.exports = class LibInterface {
 	static installDrop(win, files){
 		files = this.dropFilter(files);
 		if(files.length !== 0)
-			return this.install(files[0]);
+			return this.install(win, files[0]);
 		win.webContents.send("error", "You didn't drag/drop the correct file!");
 		return false;
 	}
@@ -48,7 +48,7 @@ module.exports = class LibInterface {
 	static uninstallDrop(win, files){
 		files = this.dropFilter(files);
 		if(files.length !== 0)
-			return this.uninstall(files[0]);
+			return this.uninstall(win, files[0]);
 		win.webContents.send("error", "You didn't drag/drop the correct file!");
 		return false;
 	}
@@ -103,7 +103,7 @@ module.exports = class LibInterface {
 			return false;
 		}
 		
-		const result = lib.Utils.install(app);
+		const result = lib.Installer.install(app);
 		if(result.error){
 			win.webContents.send("error", result.error);
 			return false;
@@ -132,18 +132,7 @@ module.exports = class LibInterface {
 			return false;
 		}
 		
-		if(app.appPathType === "asar:patched"){ // we can easily "unpatch" this
-			if(!lib.Utils.revertAsarPatching(app.resourcesPath)){
-				win.webContents.send("error", "Couldn't revert changes to the app!");
-				return false;
-			}
-			win.webContents.send("uninstall-success");
-			return true;
-		}
-		
-		// other patch types
-		
-		const result = lib.Utils.uninstall(app);
+		const result = lib.Installer.uninstall(app);
 		if(result.error){
 			win.webContents.send("error", result.error);
 			return false;
