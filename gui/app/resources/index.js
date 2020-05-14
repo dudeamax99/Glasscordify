@@ -22,7 +22,10 @@ let currentState;
 const sectionInitial = document.querySelector("#initial");
 const sectionDownloading = document.querySelector("#downloading");
 const sectionErrored = document.querySelector("#errored");
+const sectionInstalling = document.querySelector("#installing");
 const sectionInstalled = document.querySelector("#installed");
+const sectionUninstalling = document.querySelector("#uninstalling");
+const sectionUninstalled = document.querySelector("#uninstalled");
 const sectionFailed = document.querySelector("#failed");
 const sectionDnd = document.querySelector("#dnd");
 
@@ -31,7 +34,10 @@ const ApplicationStates = Object.freeze({
 	READY: "READY",
 	DOWNLOADING: "DOWNLOADING",
 	ERRORED: "ERRORED",
+	INSTALLING: "INSTALLING",
 	INSTALLED: "INSTALLED",
+	UNINSTALLING: "UNINSTALLING",
+	UNINSTALLED: "UNINSTALLED",
 	FAILED: "FAILED",
 	DRAGGING: "DRAGGING"
 });
@@ -44,7 +50,10 @@ function changeApplicationState (newState) {
 		sectionInitial.style.display = newState === ApplicationStates.READY ? "block" : "none";
 		sectionDownloading.style.display = newState === ApplicationStates.DOWNLOADING ? "block" : "none";
 		sectionErrored.style.display = newState === ApplicationStates.ERRORED ? "block" : "none";
+		sectionInstalling.style.display = newState === ApplicationStates.INSTALLING ? "block" : "none";
 		sectionInstalled.style.display = newState === ApplicationStates.INSTALLED ? "block" : "none";
+		sectionUninstalling.style.display = newState === ApplicationStates.UNINSTALLING ? "block" : "none";
+		sectionUninstalled.style.display = newState === ApplicationStates.UNINSTALLED ? "block" : "none";
 		sectionFailed.style.display = newState === ApplicationStates.FAILED ? "block" : "none";
 		sectionDnd.style.display = newState === ApplicationStates.DRAGGING ? "block" : "none";
 
@@ -65,19 +74,23 @@ document.querySelector("#btn-restart").addEventListener("click", () => ipc.send(
 
 // Drag and drop
 let counter = 0;
-document.body.ondragenter = () => counter++;
+document.body.ondragenter = () => {
+	counter++;
+	return false;
+}
 document.body.ondragleave = () => {
 	if (--counter === 0) {
 		changeApplicationState(ApplicationStates.READY);
 	}
+	return false;
 };
 document.body.ondragover = e => {
 	if ([ ...e.dataTransfer.items ].some(f => f.kind === "file")) {
 		changeApplicationState(ApplicationStates.DRAGGING);
 	}
+	return false;
 };
 document.body.ondrop = e => {
-	console.log('ondrop')
 	e.preventDefault();
 	if (currentState === ApplicationStates.DRAGGING) changeApplicationState(ApplicationStates.READY);
 	return false;
@@ -126,14 +139,34 @@ document.querySelector("#modal-close").addEventListener("click", closeModal);
 document.querySelector(".modal").addEventListener("click", closeModal);
 
 // IPC events
+ipc.on("asar-download", () => changeApplicationState(ApplicationStates.DOWNLOADING));
+ipc.on("asar-success", () => changeApplicationState(ApplicationStates.READY));
+ipc.on("asar-failure", () => changeApplicationState(ApplicationStates.ERRORED));
+
+ipc.on("install-checking-app", () => changeApplicationState(ApplicationStates.FAILED));
 ipc.on("install-success", () => {
 	changeApplicationState(ApplicationStates.INSTALLED);
 	setTimeout(() => changeApplicationState(ApplicationStates.READY), 10e3);
 });
 ipc.on("install-failed", () => changeApplicationState(ApplicationStates.FAILED));
-ipc.on("asar-download", () => changeApplicationState(ApplicationStates.DOWNLOADING));
-ipc.on("asar-success", () => changeApplicationState(ApplicationStates.READY));
-ipc.on("asar-failure", () => changeApplicationState(ApplicationStates.ERRORED));
+
+ipc.on("uninstall-checking-app", () => changeApplicationState(ApplicationStates.FAILED));
+ipc.on("uninstall-success", () => {
+	changeApplicationState(ApplicationStates.UNINSTALLED);
+	setTimeout(() => changeApplicationState(ApplicationStates.READY), 10e3);
+});
+ipc.on("uninstall-failed", () => changeApplicationState(ApplicationStates.FAILED));
+
+const errorMessageElement = document.querySelector("#error-message");
+ipc.on("explicit-error", (_, err) => {
+	changeApplicationState(ApplicationStates.FAILED);
+	errorMessageElement.innerText = err;
+});
+
+ipc.on("implicit-error", (_, err) => {
+	changeApplicationState(ApplicationStates.FAILED);
+	errorMessageElement.innerHTML = `An error popped out: <br/>${err}`;
+});
 
 // Trigger initial rendering
 changeApplicationState(ApplicationStates.READY);

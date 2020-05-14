@@ -60,6 +60,13 @@
         </div>
       </section>
 
+      <!-- Installing Section -->
+      <section id="installing" style="display: none">
+        <div class="headline">
+          Installing Glasscord<br/>Please wait...
+        </div>
+      </section>
+
       <!-- Installed Section -->
       <section id="installed" style="display: none">
         <div class="headline">
@@ -71,10 +78,28 @@
         </div>
       </section>
 
+      <!-- Uninstalling Section -->
+      <section id="uninstalling" style="display: none">
+        <div class="headline">
+          Uninstalling Glasscord<br/>Please wait...
+        </div>
+      </section>
+
+      <!-- Uninstalled Section -->
+      <section id="uninstalled" style="display: none">
+        <div class="headline">
+          Make your installed Electron app look <span class="sexy">sexy</span> with <span class="glasscord">Glasscord</span>
+        </div>
+        <div class="buttons">
+          <button class="button green" data-install>Uninstalled!</button>
+          <div class="sub-button">Got tired? <a href="#" role="button" data-uninstall>Uninstall it</a>.</div>
+        </div>
+      </section>
+
       <!-- Install failed Section -->
       <section id="failed" style="display: none">
         <div class="headline">
-          <span class="whoops">Whoops!</span> This application is not supported by Glasscord!
+          <span class="whoops">Whoops!</span> <span id="error-message">owo</span>
         </div>
         <div class="buttons">
           <button class="button red" data-install>Use another app?</button>
