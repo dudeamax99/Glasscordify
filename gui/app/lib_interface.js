@@ -41,7 +41,7 @@ module.exports = class LibInterface {
 		files = this.dropFilter(files);
 		if(files.length !== 0)
 			return this.install(win, files[0]);
-		win.webContents.send("error", "You didn't drag/drop the correct file!");
+		win.webContents.send("explicit-error", "You didn't drag/drop the correct file!");
 		return false;
 	}
 	
@@ -49,7 +49,7 @@ module.exports = class LibInterface {
 		files = this.dropFilter(files);
 		if(files.length !== 0)
 			return this.uninstall(win, files[0]);
-		win.webContents.send("error", "You didn't drag/drop the correct file!");
+		win.webContents.send("explicit-error", "You didn't drag/drop the correct file!");
 		return false;
 	}
 	
@@ -64,7 +64,7 @@ module.exports = class LibInterface {
 		if(typeof files !== "undefined")
 			return this.install(win, files[0]);
 		
-		win.webContents.send("error", "You didn't select any file!");
+		win.webContents.send("explicit-error", "You didn't select any file!");
 		return false;
 	}
 	
@@ -79,7 +79,7 @@ module.exports = class LibInterface {
 		if(typeof files !== "undefined")
 			return this.uninstall(win, files[0]);
 		
-		win.webContents.send("error", "You didn't select any file!");
+		win.webContents.send("explicit-error", "You didn't select any file!");
 		return false;
 	}
 	
@@ -94,18 +94,18 @@ module.exports = class LibInterface {
 		// Resolve the executable path
 		executableFile = await lib.Utils.getAbsoluteExecutableFile(executableFile);
 		if(typeof executableFile === "undefined"){
-			win.webContents.send("error", "Given file is not valid!");
+			win.webContents.send("implicit-error", "Given file is not valid!");
 			return false;
 		}
 		const app = lib.Installer.checkApp(executableFile);
 		if(app.error){
-			win.webContents.send("error", app.error);
+			win.webContents.send("implicit-error", app.error);
 			return false;
 		}
 		
 		const result = lib.Installer.install(app);
 		if(result.error){
-			win.webContents.send("error", result.error);
+			win.webContents.send("implicit-error", result.error);
 			return false;
 		}
 		
@@ -123,18 +123,18 @@ module.exports = class LibInterface {
 		// Resolve the executable path
 		executableFile = await lib.Utils.getAbsoluteExecutableFile(executableFile);
 		if(typeof executableFile === "undefined"){
-			win.webContents.send("error", "Given file is not valid!");
+			win.webContents.send("implicit-error", "Given file is not valid!");
 			return false;
 		}
 		const app = lib.Installer.checkApp(executableFile);
 		if(app.error){
-			win.webContents.send("error", app.error);
+			win.webContents.send("implicit-error", app.error);
 			return false;
 		}
 		
 		const result = lib.Installer.uninstall(app);
 		if(result.error){
-			win.webContents.send("error", result.error);
+			win.webContents.send("implicit-error", result.error);
 			return false;
 		}
 		
