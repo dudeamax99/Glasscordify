@@ -4,7 +4,11 @@
   "description": "Make your installed Electron app look sexy with Glasscord!",
   "main": "app/index.js",
   "scripts": {
-    "test": "electron ."
+    "test": "electron .",
+    "dist:win32": "electron-builder build --win",
+    "dist:linux": "electron-builder build --linux",
+    "dist:macos": "electron-builder build --macos",
+    "dist": "electron-builder build -mwl"
   },
   "repository": {
     "type": "git",
@@ -33,5 +37,25 @@
   "dependencies": {
     "glasscordify-lib": "file:../lib",
     "glasstron": "github:AryToNeX/Glasstron"
+  },
+  "build": {
+    "appId": "pw.arytonex.glasscordify",
+    "productName": "Glasscordify",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "app/icon/icon.ico",
+      "target": [{"target": "zip", "arch": ["x64"]}],
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "mac": {
+      "icon": "app/icon/icon.icns",
+      "target": "zip"
+    },
+    "linux": {
+      "icon": "app/icon/icon.png",
+      "target": [{"target": "AppImage", "arch": ["x64"]}]
+    }
   }
 }
