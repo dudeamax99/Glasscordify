@@ -17,3 +17,5 @@
 
 const lib = require("./lib");
 // TEST BENCH!!!
+if(process.argv[2] === "undefined") process.exit(1);
+console.log(lib.Installer.checkApp(process.argv[2]));
