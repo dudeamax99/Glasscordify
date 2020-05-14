@@ -233,6 +233,14 @@ main {
 	text-decoration-color: #ff0000;
 }
 
+.privileges-warning {
+	color: transparent;
+	background: var(--red-gradient);
+	-webkit-background-clip: text;
+	text-align: center;
+	margin-top: 25px;
+}
+
 /* Footer */
 footer {
 	flex-shrink: 0;

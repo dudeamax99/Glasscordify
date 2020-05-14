@@ -168,6 +168,35 @@ ipc.on("implicit-error", (_, err) => {
 	errorMessageElement.innerHTML = `An error popped out: <br/>${err}`;
 });
 
+// Privileges checks
+let isAdmin = require('os').userInfo().uid === 0;
+let protectedPath = "protected folders";
+let rootTerminology = "root";
+switch(process.platform){
+	case "win32":
+		rootTerminology = "Administrator";
+		protectedPath = "C:\\Program Files";
+		try {
+			require("child_process").execSync("fltmc")
+			isAdmin = true;
+		} catch(e) {
+			isAdmin = false;
+		}
+		break
+	case "linux":
+		protectedPath = "root-owned directories";
+		break
+	case "darwin": // TODO
+		break
+}
+
+if (!isAdmin) {
+	const warning = document.createElement("div");
+	warning.className = "privileges-warning";
+	warning.innerText = `Running in user mode. To patch applications under ${protectedPath} you must launch Glasscordify as ${rootTerminology}`;
+	document.querySelector('main').appendChild(warning);
+}
+
 // Trigger initial rendering
 changeApplicationState(ApplicationStates.READY);
 ipc.send("ready");
